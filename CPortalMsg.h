@@ -16,38 +16,7 @@
 #include <stdint.h>
 #include <map>
 #include <vector>
-
-//portal 协议的版本号
-enum class EPORTAL_VER : uint8_t
-{
-    VER1 = 0x01,
-    VER2 = 0x02
-};
-
-//portal 协议认证类型
-enum class EAUTH_TYPE : uint8_t
-{
-    CHAP = 0x00,
-    PAP = 0x01
-};
-
-
-//包类型
-enum class EMSG_TYPE : uint8_t
-{
-    NONE = 0x00,
-    REQ_CHALLENGE = 0x01,
-    ACK_CHALLENGE = 0x02,
-    REQ_AUTH = 0x03,
-    ACK_AUTH = 0x04,
-    REQ_LOGOUT = 0x05,
-    ACK_LOGOUT = 0x06,
-    AFF_ACK_AUTH = 0x07,
-    NTF_LOGOUT = 0x08,
-    REQ_INFO = 0x09,
-    ACK_INFO = 0x0a,
-};
-
+#include "PortalCommon.h"
 
 
 //存放网络数据包的数据类型
@@ -61,7 +30,7 @@ public:
     typedef std::map<EMSG_TYPE,std::string> MsgType2Str;
 public:
     CPortalMsgV1() = default;
-    ~CPortalMsgV1() = default;
+    virtual ~CPortalMsgV1() = default;
 
     EMSG_TYPE type() const;
     void setType(const EMSG_TYPE &type);

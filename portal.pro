@@ -15,3 +15,9 @@ HEADERS += \
     CPortalAttr.h \
     PortalCommon.h
 
+
+
+LIBS += \
+        -lgtest    \
+        -lgtest_main   \
+        -lpthread

@@ -28,11 +28,6 @@ CPortalMsgV1::MsgType2Str CPortalMsgV1::_typeStr =
     { EMSG_TYPE::ACK_INFO, "info ack"}
 };
 
-CPortalMsgV1::CPortalMsgV1()
-{
-
-}
-
 EMSG_TYPE CPortalMsgV1::type() const
 {
      return _head._type;
@@ -125,7 +120,7 @@ uint8_t CPortalMsgV1::attrNum() const
 
 
 
-CPortalMsgV1::HexType CPortalMsgV1::pack()
+HexType CPortalMsgV1::pack()
 {
     _data.clear();
 
