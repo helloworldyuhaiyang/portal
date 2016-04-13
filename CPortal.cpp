@@ -16,9 +16,6 @@
 namespace Taiji {
 
 
-TAIJI_NEW_EXCEPTION_CPP( 200, ExceptPortal )
-
-TAIJI_NEW_EXCEPTION_CPP( 201, ExceptErrorVersion )
 
 CPortal::CPortal(EPORTAL_VER ver)
 {

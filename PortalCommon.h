@@ -13,6 +13,21 @@
 #ifndef PORTALCOMMON_H
 #define PORTALCOMMON_H
 
+#include "common/Exception.h"
+#include <vector>
+#include <map>
+
+namespace Taiji {
+
+
+//portal 协议模块的基本异常
+TAIJI_NEW_EXCEPTION_INCLUDE( ExceptPortal,ExceptProtocal, 20 )
+
+//错误的 协议版本
+TAIJI_NEW_EXCEPTION_INCLUDE( ExceptErrorVersion,ExceptPortal, 1 )
+
+//错误的长度
+TAIJI_NEW_EXCEPTION_INCLUDE( ExceptInvildLength,ExceptPortal, 2 )
 //portal 协议的版本号
 enum class EPORTAL_VER : uint8_t
 {
@@ -60,6 +75,11 @@ enum class EATTR_TYPE : uint8_t
 typedef std::string HexType;
 
 
+void PrintHex( const void *data, size_t len );
+
+
+
+}
 
 #endif // PORTALCOMMON_H
 

@@ -14,13 +14,14 @@
 #define CPORTALMSG_H
 
 #include <stdint.h>
-#include <map>
-#include <vector>
 #include "PortalCommon.h"
+#include "CPortalAttr.h"
 
 
-//存放网络数据包的数据类型
-typedef std::string HexType;
+namespace Taiji {
+
+//存放属性的数组
+typedef std::vector<CPortalAttr> AttrVer;
 
 
 //portal 协议类
@@ -48,8 +49,8 @@ public:
     uint16_t reqId() const;
     void setReqId(const uint16_t &reqId);
 
-    uint32_t userMac() const;
-    void setUserMac(const uint32_t &userMac);
+    const std::string userIp();
+    void setUserIp(const std::string &userIp);
 
     uint16_t userPort() const;
     void setUserPort(const uint16_t &userPort);
@@ -60,12 +61,19 @@ public:
     uint8_t attrNum() const;
     void setAttrNum(const uint8_t &attrNum);
 
-    HexType pack( void );
+
+    //要保证这个类存在否则引用会出问题
+    const HexType& pack( void );
     /**
      * @brief unpack
-     * @warning throw Taiji::InvaildPortalPack()
+     * @warnin
      */
-    void unpack( void );
+    void unpack( const HexType& data );
+
+
+    const std::vector<CPortalAttr>& getAttr() const;
+    void setAttr(const std::vector<CPortalAttr> &attr);
+
 private:
     static MsgType2Str _typeStr;			//数据包类型与对应的字符串
     //数据包的头
@@ -80,15 +88,18 @@ private:
         uint8_t _rsv = 0;		//预留字段,全部填0
         uint16_t _serialNo = 0; //报文序列号 portal 随机生成
         uint16_t _reqId = 0;	//nas 设备随机生成
-        uint32_t _userMac = 0; 	//用户的 mac
+        uint32_t _userIp = 0; 	//用户的 mac
         uint16_t _userPort = 0;	//用户的 port 没有用到
         uint8_t _errCode = 0;	//错误码
         uint8_t _attrNum = 0;	//属性个数
     } _head;
 #pragma pack(pop)
     //属性数组
-   //std::vector<attr> _attr;
+   AttrVer _attr;
    HexType _data;			//存放网络数据包
 };
+
+
+}
 
 #endif // CPORTALMSG_H

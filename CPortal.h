@@ -14,14 +14,9 @@
 #define CPORTAL_H
 
 #include"CPortalMsg.h"
-#include "common/Exception.hpp"
 namespace Taiji {
 
-//portal 协议模块的基本错误
-TAIJI_NEW_EXCEPTION_INCLUDE( ExceptPortal,Exception, 200 )
 
-//错误的 协议版本
-TAIJI_NEW_EXCEPTION_INCLUDE( ExceptErrorVersion,ExceptPortal, 201 )
 
 class CPortal
 {

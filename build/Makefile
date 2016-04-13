@@ -48,14 +48,20 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = ../main.cpp \
-		../CPortalMsg.cpp \
+SOURCES       = ../CPortalMsg.cpp \
 		../CPortal.cpp \
-		../CPortalAttr.cpp 
-OBJECTS       = main.o \
-		CPortalMsg.o \
+		../CPortalAttr.cpp \
+		../common/Exception.cpp \
+		../PortalCommon.cpp \
+		../gtest/CAttrUnit.cpp \
+		../gtest/CMsgUnit.cpp 
+OBJECTS       = CPortalMsg.o \
 		CPortal.o \
-		CPortalAttr.o
+		CPortalAttr.o \
+		Exception.o \
+		PortalCommon.o \
+		CAttrUnit.o \
+		CMsgUnit.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/shell-unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
@@ -106,13 +112,18 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
 		../../portal.pro CPortalMsg.h \
-		common/Exception.hpp \
 		CPortal.h \
 		CPortalAttr.h \
-		PortalCommon.h ../main.cpp \
-		../CPortalMsg.cpp \
+		PortalCommon.h \
+		common/Exception.h \
+		gtest/CAttrUnit.h \
+		gtest/CMsgUnit.h ../CPortalMsg.cpp \
 		../CPortal.cpp \
-		../CPortalAttr.cpp
+		../CPortalAttr.cpp \
+		../common/Exception.cpp \
+		../PortalCommon.cpp \
+		../gtest/CAttrUnit.cpp \
+		../gtest/CMsgUnit.cpp
 QMAKE_TARGET  = portal
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = portal
@@ -284,23 +295,43 @@ compiler_clean:
 
 ####### Compile
 
-main.o: ../main.cpp ../CPortalAttr.h \
-		../PortalCommon.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../main.cpp
-
 CPortalMsg.o: ../CPortalMsg.cpp ../CPortalMsg.h \
-		../PortalCommon.h
+		../PortalCommon.h \
+		../common/Exception.h \
+		../CPortalAttr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CPortalMsg.o ../CPortalMsg.cpp
 
 CPortal.o: ../CPortal.cpp ../CPortal.h \
 		../CPortalMsg.h \
 		../PortalCommon.h \
-		../common/Exception.hpp
+		../common/Exception.h \
+		../CPortalAttr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CPortal.o ../CPortal.cpp
 
 CPortalAttr.o: ../CPortalAttr.cpp ../CPortalAttr.h \
-		../PortalCommon.h
+		../PortalCommon.h \
+		../common/Exception.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CPortalAttr.o ../CPortalAttr.cpp
+
+Exception.o: ../common/Exception.cpp ../common/Exception.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Exception.o ../common/Exception.cpp
+
+PortalCommon.o: ../PortalCommon.cpp ../PortalCommon.h \
+		../common/Exception.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o PortalCommon.o ../PortalCommon.cpp
+
+CAttrUnit.o: ../gtest/CAttrUnit.cpp ../gtest/CAttrUnit.h \
+		../CPortalAttr.h \
+		../PortalCommon.h \
+		../common/Exception.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CAttrUnit.o ../gtest/CAttrUnit.cpp
+
+CMsgUnit.o: ../gtest/CMsgUnit.cpp ../gtest/CMsgUnit.h \
+		../CPortalMsg.h \
+		../PortalCommon.h \
+		../common/Exception.h \
+		../CPortalAttr.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CMsgUnit.o ../gtest/CMsgUnit.cpp
 
 ####### Install
 

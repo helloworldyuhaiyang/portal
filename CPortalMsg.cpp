@@ -11,6 +11,16 @@
 */
 
 #include "CPortalMsg.h"
+#include "memory.h"
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
+
+using std::string;
+
+
+namespace Taiji {
 
 
 CPortalMsgV1::MsgType2Str CPortalMsgV1::_typeStr =
@@ -70,7 +80,7 @@ uint16_t CPortalMsgV1::serialNo() const
 
 void CPortalMsgV1::setSerialNo(const uint16_t &serialNo)
 {
-    _head._serialNo = serialNo;
+    _head._serialNo = ::htons( serialNo );
 }
 
 uint16_t CPortalMsgV1::reqId() const
@@ -80,17 +90,18 @@ uint16_t CPortalMsgV1::reqId() const
 
 void CPortalMsgV1::setReqId(const uint16_t &reqId)
 {
-    _head._reqId = reqId;
+    _head._reqId = ::htons( reqId );
 }
 
-uint32_t CPortalMsgV1::userMac() const
+const std::string CPortalMsgV1::userIp()
 {
-    return _head._userMac;
+    string userIp = ::inet_ntoa( *(struct in_addr*)&_head._userIp );
+    return userIp;
 }
 
-void CPortalMsgV1::setUserMac(const uint32_t &userMac)
+void CPortalMsgV1::setUserIp(const std::string &userIp )
 {
-    _head._userMac = userMac;
+    _head._userIp = ::inet_addr( userIp.c_str() );
 }
 
 uint16_t CPortalMsgV1::userPort() const
@@ -100,7 +111,7 @@ uint16_t CPortalMsgV1::userPort() const
 
 void CPortalMsgV1::setUserPort(const uint16_t &userPort)
 {
-    _head._userPort = userPort;
+    _head._userPort = ::htons( userPort );
 }
 
 uint8_t CPortalMsgV1::errCode() const
@@ -118,18 +129,59 @@ uint8_t CPortalMsgV1::attrNum() const
     return _head._attrNum;
 }
 
+void CPortalMsgV1::setAttrNum(const uint8_t &attrNum)
+{
+    _head._attrNum = attrNum;
+}
 
 
-HexType CPortalMsgV1::pack()
+
+const HexType &CPortalMsgV1::pack()
 {
     _data.clear();
 
-    /*
-     * todo 要增加设备的属性个先
-     */
+    //设置属性个数
+    setAttrNum( _attr.size() );
+    //添加头信息
     _data.append( (char*)&_head, sizeof(_head) );
-
+    //添加属性信息
+    for ( auto& it : _attr )
+    {
+        const HexType& data = it.pack();
+        _data.append( data.data(), data.length() );
+    }
 
     return _data;
+}
+
+void CPortalMsgV1::unpack( const HexType& data )
+{
+    if ( data.length() < sizeof(SMsgHead) )
+    {
+        throw ExceptInvildLength("length of portal pack is too small");
+    }
+    //解析头信息
+    ::mempcpy( &_head, data.data(), sizeof(SMsgHead) );
+    uint8_t atNum = attrNum();
+    //解析属性包
+    CPortalAttr attr;
+    auto attrsIt = data.begin() + sizeof(SMsgHead);
+    auto attrsEnd = data.end();
+    for ( int i=0; i < atNum; ++i )
+    {
+        attr.unpack( HexType(attrsIt, attrsEnd) );
+    }
+}
+
+const std::vector<CPortalAttr> &CPortalMsgV1::getAttr() const
+{
+    return _attr;
+}
+
+void CPortalMsgV1::setAttr(const std::vector<CPortalAttr> &attr)
+{
+    _attr = attr;
+}
+
 }
 

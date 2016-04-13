@@ -25,6 +25,7 @@ public:
     CPortalAttr() = default;
     ~CPortalAttr() = default;
 
+    CPortalAttr( EATTR_TYPE type, const std::string& val );
 
 
     EATTR_TYPE type() const;
@@ -37,6 +38,9 @@ public:
 
     const HexType& pack( void );
 
+    void unpack( const HexType& data );
+
+    void printHex();
 private:
     struct SAttrHead
     {

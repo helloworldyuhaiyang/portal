@@ -12,8 +12,16 @@
 
 #include "CPortalAttr.h"
 
+#include <memory.h>
+
 namespace Taiji {
 
+
+CPortalAttr::CPortalAttr(EATTR_TYPE type, const std::__cxx11::string &val)
+{
+    setType( type );
+    setVal( val );
+}
 
 EATTR_TYPE CPortalAttr::type() const
 {
@@ -38,7 +46,7 @@ std::string CPortalAttr::val() const
 void CPortalAttr::setVal(const std::string &val)
 {
     _val = val;
-    _head._length = val.length();
+    _head._length = val.length() + 2;
 }
 
 const HexType &CPortalAttr::pack()
@@ -46,8 +54,36 @@ const HexType &CPortalAttr::pack()
     _data.clear();
 
     _data.append( (char*)&_head, sizeof( _head ) );
-    _data.append( (char*)&_val, _val.length() );
+    _data.append( (char*)_val.data(), _val.length() );
     return _data;
+}
+
+void CPortalAttr::unpack( const HexType& data )
+{
+    if ( data.length() < sizeof( SAttrHead ) )
+    {
+        throw ExceptInvildLength("length of attr pack is too small");
+    }
+    //解析头
+    ::memcpy( &_head, data.data(),sizeof(SAttrHead) );
+    //数据的长度小于 head 的 length
+    if ( length() > data.length() )
+    {
+        throw ExceptInvildLength("length of attr is error");
+    }
+    _val.assign( data.begin()+sizeof(SAttrHead), data.end() );
+}
+
+void CPortalAttr::printHex()
+{
+    const uint8_t* p = (const uint8_t*)_data.data();
+    size_t len = _data.length();
+
+    for ( size_t i = 0; i < len; ++i )
+    {
+        printf("%02x ", *(p+i) );
+    }
+    printf("\n");
 }
 
 
