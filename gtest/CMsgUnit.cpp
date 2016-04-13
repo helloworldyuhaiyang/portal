@@ -12,6 +12,7 @@
 
 #include "CMsgUnit.h"
 
+using std::string;
 
 void CMsgUnit::SetUpTestCase()
 {
@@ -33,25 +34,54 @@ TEST_F( CMsgUnit, pack_Ok )
     _msg.setUserIp( "192.168.10.179" );
     _msg.setUserPort( 8081 );
     //添加属性
-    AttrVer attrs;
-    CPortalAttr attr1( EATTR_TYPE::USER_NAME, "yuhaiyang" );
-    CPortalAttr attr2( EATTR_TYPE::PASSWORD, "123456" );
-    attrs.push_back( attr1 );
-    attrs.push_back( attr2 );
-    _msg.setAttr( attrs );
+    _msg.addAttr( CPortalAttr( EATTR_TYPE::USER_NAME, "yuhaiyang" ) );
+    _msg.addAttr( CPortalAttr( EATTR_TYPE::PASSWORD, "123456" ) );
+    //打包数据
     HexType data = _msg.pack();
-    PrintHex( data.data(), data.length() );
-    uint8_t buf[] = {
+
+    HexType obj = {
         0x01, 0x03, 0x00, 0x00, 0x00, 0x7b, 0x01, 0xc8, 0xc0, 0xa8,
         0x0a, 0xb3, 0x1f, 0x91, 0x00, 0x02, 0x01, 0x0b, 0x79, 0x75,
         0x68, 0x61, 0x69, 0x79, 0x61, 0x6e, 0x67, 0x02, 0x08, 0x31,
         0x32, 0x33, 0x34, 0x35, 0x36
     };
-    PrintHex( buf, sizeof(buf) );
-    HexType obj;
-    obj.assign( (char*)buf, sizeof(buf) );
 
+    PrintHex( data.data(), data.length() );
+    PrintHex( obj.data(), obj.length() );
+
+    //对比数据
     ASSERT_EQ( data, obj );
 }
+
+
+TEST_F( CMsgUnit, unpack_Ok )
+{
+    HexType obj = {
+        0x01, 0x03, 0x00, 0x00, 0x00, 0x7b, 0x01, 0xc8, 0xc0, 0xa8,
+        0x0a, 0xb3, 0x1f, 0x91, 0x00, 0x02, 0x01, 0x0b, 0x79, 0x75,
+        0x68, 0x61, 0x69, 0x79, 0x61, 0x6e, 0x67, 0x02, 0x08, 0x31,
+        0x32, 0x33, 0x34, 0x35, 0x36
+    };
+    //解包数据
+    _msg.unpack( obj );
+    //获取解包的数据
+    string typeStr = _msg.getTypeStr();
+    std::cout << "MsgType:" << typeStr << std::endl;
+
+    uint16_t serialNo =_msg.serialNo();
+    uint16_t reqId = _msg.reqId();
+    string userIp = _msg.userIp();
+    uint16_t port = _msg.userPort();
+
+
+    ASSERT_EQ( typeStr, "auth req" );
+    ASSERT_EQ( serialNo, 123 );
+    ASSERT_EQ( reqId, 456 );
+    ASSERT_EQ( userIp, "192.168.10.179" );
+    ASSERT_EQ( port, 8081 );
+    std::cout << "userIp: " << userIp << std::endl;
+}
+
+
 
 

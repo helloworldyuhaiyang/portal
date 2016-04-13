@@ -22,6 +22,9 @@ namespace Taiji {
 class CPortalAttr
 {
 public:
+    typedef std::map< EATTR_TYPE, std::string> AttrType2Str;
+
+public:
     CPortalAttr() = default;
     ~CPortalAttr() = default;
 
@@ -30,6 +33,7 @@ public:
 
     EATTR_TYPE type() const;
     void setType(const EATTR_TYPE &type);
+    std::string getTypeStr( void );
 
     uint8_t length() const;
 
@@ -42,6 +46,8 @@ public:
 
     void printHex();
 private:
+    //数据包类型与对应的字符串
+    static AttrType2Str _typeStr;
     struct SAttrHead
     {
         EATTR_TYPE _type = EATTR_TYPE::NONE; 	///< 包类型

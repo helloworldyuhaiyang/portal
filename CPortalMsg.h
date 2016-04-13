@@ -71,8 +71,9 @@ public:
     void unpack( const HexType& data );
 
 
-    const std::vector<CPortalAttr>& getAttr() const;
-    void setAttr(const std::vector<CPortalAttr> &attr);
+    void addAttr( const CPortalAttr& attr );
+    const AttrVer& getAttr() const;
+    void setAttr(const AttrVer &attr);
 
 private:
     static MsgType2Str _typeStr;			//数据包类型与对应的字符串
@@ -95,7 +96,7 @@ private:
     } _head;
 #pragma pack(pop)
     //属性数组
-   AttrVer _attr;
+   AttrVer _attrs;
    HexType _data;			//存放网络数据包
 };
 

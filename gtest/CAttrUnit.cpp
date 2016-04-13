@@ -34,6 +34,7 @@ TEST_F( CAttrUnit,pack_OK )
     HexType data = _attr.pack();
     HexType obj = { 0x01, 0x0b, 0x79, 0x75, 0x68, 0x61, 0x69, 0x79, 0x61, 0x6e, 0x67 };
     PrintHex( obj.data(), obj.length() );
+    PrintHex( obj.data(), obj.length() );
     ASSERT_EQ( data, obj );
 }
 
@@ -50,4 +51,14 @@ TEST_F( CAttrUnit,unpack_OK )
     ASSERT_EQ( EATTR_TYPE::USER_NAME, type );
     ASSERT_EQ( len, 11 );
     ASSERT_EQ( val, "yuhaiyang" );
+}
+
+TEST_F( CAttrUnit, attr_type2Str )
+{
+    CPortalAttr attr;
+    attr.setType( EATTR_TYPE::CHALLENGE );
+    string typeStr = attr.getTypeStr();
+    std::cout << "typeStr: " <<  typeStr << std::endl;
+
+    ASSERT_EQ( "challenge", typeStr );
 }

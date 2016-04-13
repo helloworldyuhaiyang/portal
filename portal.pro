@@ -25,4 +25,5 @@ HEADERS += \
 LIBS += \
         -lgtest    \
         -lgtest_main   \
-        -lpthread
+        -lpthread	\
+        -lPocoNet	\

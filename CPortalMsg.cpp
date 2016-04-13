@@ -75,7 +75,7 @@ void CPortalMsgV1::setRsv(const uint8_t &rsv)
 
 uint16_t CPortalMsgV1::serialNo() const
 {
-    return _head._serialNo;
+    return ::htons( _head._serialNo );
 }
 
 void CPortalMsgV1::setSerialNo(const uint16_t &serialNo)
@@ -85,7 +85,7 @@ void CPortalMsgV1::setSerialNo(const uint16_t &serialNo)
 
 uint16_t CPortalMsgV1::reqId() const
 {
-    return _head._reqId;
+    return ::htons( _head._reqId );
 }
 
 void CPortalMsgV1::setReqId(const uint16_t &reqId)
@@ -106,7 +106,7 @@ void CPortalMsgV1::setUserIp(const std::string &userIp )
 
 uint16_t CPortalMsgV1::userPort() const
 {
-    return _head._userPort;
+    return ::ntohs(_head._userPort );
 }
 
 void CPortalMsgV1::setUserPort(const uint16_t &userPort)
@@ -141,11 +141,11 @@ const HexType &CPortalMsgV1::pack()
     _data.clear();
 
     //设置属性个数
-    setAttrNum( _attr.size() );
+    setAttrNum( _attrs.size() );
     //添加头信息
-    _data.append( (char*)&_head, sizeof(_head) );
+    _data.append( ( uint8_t*)&_head, sizeof(_head) );
     //添加属性信息
-    for ( auto& it : _attr )
+    for ( auto& it : _attrs )
     {
         const HexType& data = it.pack();
         _data.append( data.data(), data.length() );
@@ -169,18 +169,33 @@ void CPortalMsgV1::unpack( const HexType& data )
     auto attrsEnd = data.end();
     for ( int i=0; i < atNum; ++i )
     {
+        //解包属性
         attr.unpack( HexType(attrsIt, attrsEnd) );
+        //存入数组
+        _attrs.push_back( attr );
+        //跳过一个属性包
+        attrsIt += attr.length();
+        //判断长度防止越界
+        if ( attrsIt > attrsEnd )
+        {
+            throw ExceptErrorFormat( "Format of attrs is error");
+        }
     }
 }
 
-const std::vector<CPortalAttr> &CPortalMsgV1::getAttr() const
+void CPortalMsgV1::addAttr(const CPortalAttr &attr)
 {
-    return _attr;
+    _attrs.push_back( attr );
 }
 
-void CPortalMsgV1::setAttr(const std::vector<CPortalAttr> &attr)
+const AttrVer &CPortalMsgV1::getAttr() const
 {
-    _attr = attr;
+    return _attrs;
+}
+
+void CPortalMsgV1::setAttr(const AttrVer &attr)
+{
+    _attrs = attr;
 }
 
 }

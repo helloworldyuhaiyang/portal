@@ -16,6 +16,14 @@
 
 namespace Taiji {
 
+CPortalAttr::AttrType2Str CPortalAttr::_typeStr = {
+    { EATTR_TYPE::NONE, "init attr" },
+    { EATTR_TYPE::USER_NAME, "user name" },
+    { EATTR_TYPE::PASSWORD, "passWord" },
+    { EATTR_TYPE::CHALLENGE, "challenge"},
+    { EATTR_TYPE::CHAP_PASS_WORD, "chap password" }
+};
+
 
 CPortalAttr::CPortalAttr(EATTR_TYPE type, const std::__cxx11::string &val)
 {
@@ -31,6 +39,11 @@ EATTR_TYPE CPortalAttr::type() const
 void CPortalAttr::setType(const EATTR_TYPE &type)
 {
     _head._type = type;
+}
+
+std::string CPortalAttr::getTypeStr()
+{
+    return _typeStr.find( _head._type )->second;
 }
 
 uint8_t CPortalAttr::length() const
@@ -53,8 +66,8 @@ const HexType &CPortalAttr::pack()
 {
     _data.clear();
 
-    _data.append( (char*)&_head, sizeof( _head ) );
-    _data.append( (char*)_val.data(), _val.length() );
+    _data.append( (uint8_t*)&_head, sizeof( _head ) );
+    _data.append( (uint8_t*)_val.data(), _val.length() );
     return _data;
 }
 
@@ -69,7 +82,7 @@ void CPortalAttr::unpack( const HexType& data )
     //数据的长度小于 head 的 length
     if ( length() > data.length() )
     {
-        throw ExceptInvildLength("length of attr is error");
+        throw ExceptInvildLength("length of attr is bigger then length of data");
     }
     _val.assign( data.begin()+sizeof(SAttrHead), data.end() );
 }

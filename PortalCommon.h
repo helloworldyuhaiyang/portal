@@ -28,6 +28,10 @@ TAIJI_NEW_EXCEPTION_INCLUDE( ExceptErrorVersion,ExceptPortal, 1 )
 
 //错误的长度
 TAIJI_NEW_EXCEPTION_INCLUDE( ExceptInvildLength,ExceptPortal, 2 )
+
+//报文格式不对。根据协议要求不能解析
+TAIJI_NEW_EXCEPTION_INCLUDE( ExceptErrorFormat,ExceptPortal, 3 )
+
 //portal 协议的版本号
 enum class EPORTAL_VER : uint8_t
 {
@@ -72,7 +76,7 @@ enum class EATTR_TYPE : uint8_t
 };
 
 //存放网络数据包的数据类型
-typedef std::string HexType;
+typedef std::basic_string<uint8_t> HexType;
 
 
 void PrintHex( const void *data, size_t len );
