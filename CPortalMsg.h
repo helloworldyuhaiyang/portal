@@ -72,8 +72,8 @@ public:
 
 
     void addAttr( const CPortalAttr& attr );
-    const AttrVer& getAttr() const;
-    void setAttr(const AttrVer &attr);
+    const AttrVer& attrs() const;
+    void setAttrs(const AttrVer &attr);
 
 private:
     static MsgType2Str _typeStr;			//数据包类型与对应的字符串

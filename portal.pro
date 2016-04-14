@@ -10,7 +10,8 @@ SOURCES += \
     common/Exception.cpp \
     PortalCommon.cpp	\
     gtest/CAttrUnit.cpp \
-    gtest/CMsgUnit.cpp
+    gtest/CMsgUnit.cpp \
+    gtest/CPortalUnit.cpp
 
 HEADERS += \
     CPortalMsg.h \
@@ -19,7 +20,8 @@ HEADERS += \
     PortalCommon.h \
     common/Exception.h	\
     gtest/CAttrUnit.h \
-    gtest/CMsgUnit.h
+    gtest/CMsgUnit.h \
+    gtest/CPortalUnit.h
 
 
 LIBS += \
@@ -27,3 +29,5 @@ LIBS += \
         -lgtest_main   \
         -lpthread	\
         -lPocoNet	\
+        -lPocoFoundation	\
+        -lcrypto

@@ -32,6 +32,10 @@ TAIJI_NEW_EXCEPTION_INCLUDE( ExceptInvildLength,ExceptPortal, 2 )
 //报文格式不对。根据协议要求不能解析
 TAIJI_NEW_EXCEPTION_INCLUDE( ExceptErrorFormat,ExceptPortal, 3 )
 
+
+//不是预期的包
+TAIJI_NEW_EXCEPTION_INCLUDE( ExceptUnexceptedPack,ExceptPortal ,4 )
+
 //portal 协议的版本号
 enum class EPORTAL_VER : uint8_t
 {

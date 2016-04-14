@@ -28,8 +28,11 @@ public:
     CPortalAttr() = default;
     ~CPortalAttr() = default;
 
-    CPortalAttr( EATTR_TYPE type, const std::string& val );
+    //给 stl vector 用的
+    CPortalAttr( const CPortalAttr& other );
 
+    CPortalAttr( EATTR_TYPE type, const std::string& val );
+    CPortalAttr( EATTR_TYPE type, const HexType& val );
 
     EATTR_TYPE type() const;
     void setType(const EATTR_TYPE &type);
@@ -39,6 +42,7 @@ public:
 
     std::string val() const;
     void setVal(const std::string &val);
+    void setVal(const HexType &val);
 
     const HexType& pack( void );
 

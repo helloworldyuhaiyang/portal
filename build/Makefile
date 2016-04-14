@@ -36,7 +36,7 @@ DISTNAME      = portal1.0.0
 DISTDIR = /home/yuhaiyang/codeplace/portal/.tmp/portal1.0.0
 LINK          = g++
 LFLAGS        = -m64
-LIBS          = $(SUBLIBS) -lgtest -lgtest_main -lpthread -lPocoNet 
+LIBS          = $(SUBLIBS) -lgtest -lgtest_main -lpthread -lPocoNet -lPocoFoundation -lcrypto 
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -54,14 +54,16 @@ SOURCES       = ../CPortalMsg.cpp \
 		../common/Exception.cpp \
 		../PortalCommon.cpp \
 		../gtest/CAttrUnit.cpp \
-		../gtest/CMsgUnit.cpp 
+		../gtest/CMsgUnit.cpp \
+		../gtest/CPortalUnit.cpp 
 OBJECTS       = CPortalMsg.o \
 		CPortal.o \
 		CPortalAttr.o \
 		Exception.o \
 		PortalCommon.o \
 		CAttrUnit.o \
-		CMsgUnit.o
+		CMsgUnit.o \
+		CPortalUnit.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/shell-unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
@@ -117,13 +119,15 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		PortalCommon.h \
 		common/Exception.h \
 		gtest/CAttrUnit.h \
-		gtest/CMsgUnit.h ../CPortalMsg.cpp \
+		gtest/CMsgUnit.h \
+		gtest/CPortalUnit.h ../CPortalMsg.cpp \
 		../CPortal.cpp \
 		../CPortalAttr.cpp \
 		../common/Exception.cpp \
 		../PortalCommon.cpp \
 		../gtest/CAttrUnit.cpp \
-		../gtest/CMsgUnit.cpp
+		../gtest/CMsgUnit.cpp \
+		../gtest/CPortalUnit.cpp
 QMAKE_TARGET  = portal
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = portal
@@ -332,6 +336,14 @@ CMsgUnit.o: ../gtest/CMsgUnit.cpp ../gtest/CMsgUnit.h \
 		../common/Exception.h \
 		../CPortalAttr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CMsgUnit.o ../gtest/CMsgUnit.cpp
+
+CPortalUnit.o: ../gtest/CPortalUnit.cpp ../gtest/CPortalUnit.h \
+		../CPortal.h \
+		../CPortalMsg.h \
+		../PortalCommon.h \
+		../common/Exception.h \
+		../CPortalAttr.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CPortalUnit.o ../gtest/CPortalUnit.cpp
 
 ####### Install
 

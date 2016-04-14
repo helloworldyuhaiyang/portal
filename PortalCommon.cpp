@@ -26,6 +26,10 @@ TAIJI_NEW_EXCEPTION_CPP( ExceptInvildLength,ExceptPortal, 2 )
 //报文格式不对。根据协议要求不能解析
 TAIJI_NEW_EXCEPTION_CPP( ExceptErrorFormat,ExceptPortal, 3 )
 
+//不是预期的报文
+TAIJI_NEW_EXCEPTION_CPP( ExceptUnexceptedPack,ExceptPortal ,4 )
+
+
 void PrintHex( const void *data, size_t len )
 {
     const uint8_t* p = (const uint8_t*)data;

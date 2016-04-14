@@ -50,7 +50,7 @@ TEST_F( CAttrUnit,unpack_OK )
     std::cout << "val: " << _attr.val() << std::endl;
     ASSERT_EQ( EATTR_TYPE::USER_NAME, type );
     ASSERT_EQ( len, 11 );
-    ASSERT_EQ( val, "yuhaiyang" );
+    ASSERT_EQ( val, string("yuhaiyang") );
 }
 
 TEST_F( CAttrUnit, attr_type2Str )

@@ -25,7 +25,19 @@ CPortalAttr::AttrType2Str CPortalAttr::_typeStr = {
 };
 
 
+CPortalAttr::CPortalAttr(const CPortalAttr &other)
+{
+    setType( other.type() );
+    setVal( other.val() );
+}
+
 CPortalAttr::CPortalAttr(EATTR_TYPE type, const std::__cxx11::string &val)
+{
+    setType( type );
+    setVal( val );
+}
+
+CPortalAttr::CPortalAttr(EATTR_TYPE type, const HexType &val)
 {
     setType( type );
     setVal( val );
@@ -59,7 +71,13 @@ std::string CPortalAttr::val() const
 void CPortalAttr::setVal(const std::string &val)
 {
     _val = val;
-    _head._length = val.length() + 2;
+    _head._length = val.length() + sizeof(SAttrHead);
+}
+
+void CPortalAttr::setVal(const HexType &val)
+{
+    _val.assign( (char*)val.data(), val.length() );
+    _head._length = val.length() + sizeof(SAttrHead);
 }
 
 const HexType &CPortalAttr::pack()
@@ -84,7 +102,8 @@ void CPortalAttr::unpack( const HexType& data )
     {
         throw ExceptInvildLength("length of attr is bigger then length of data");
     }
-    _val.assign( data.begin()+sizeof(SAttrHead), data.end() );
+    auto begin = data.begin()+sizeof(SAttrHead);
+    _val.assign( begin, begin+length()-sizeof(SAttrHead) );
 }
 
 void CPortalAttr::printHex()

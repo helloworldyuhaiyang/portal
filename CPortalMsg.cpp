@@ -188,12 +188,12 @@ void CPortalMsgV1::addAttr(const CPortalAttr &attr)
     _attrs.push_back( attr );
 }
 
-const AttrVer &CPortalMsgV1::getAttr() const
+const AttrVer &CPortalMsgV1::attrs() const
 {
     return _attrs;
 }
 
-void CPortalMsgV1::setAttr(const AttrVer &attr)
+void CPortalMsgV1::setAttrs(const AttrVer &attr)
 {
     _attrs = attr;
 }
