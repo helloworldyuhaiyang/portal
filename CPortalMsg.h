@@ -63,22 +63,38 @@ public:
 
 
     //要保证这个类存在否则引用会出问题
-    const HexType& pack( void );
+    virtual const HexType& pack( void );
+
+
+
     /**
      * @brief unpack
      * @warnin
      */
-    void unpack( const HexType& data );
+    virtual void unpack( const HexType& data );
 
 
     void addAttr( const CPortalAttr& attr );
     const AttrVer& attrs() const;
     void setAttrs(const AttrVer &attr);
 
-private:
-    static MsgType2Str _typeStr;			//数据包类型与对应的字符串
-    //数据包的头
+protected:
+    //解包属性数据到 _attrs
+    void unpackAttrs( HexType::const_iterator& start, HexType::const_iterator& end );
 
+    /**
+     * @brief packAttrs
+     * @param data
+     *
+     * 打包所有的属性数据到 data 之后
+     *
+     */
+    void packAttrs( HexType& data );
+
+protected:
+    static MsgType2Str _typeStr;			//数据包类型与对应的字符串
+
+//数据包的头
 #pragma pack(push)
 #pragma pack(1)
     struct  SMsgHead
@@ -96,8 +112,8 @@ private:
     } _head;
 #pragma pack(pop)
     //属性数组
-   AttrVer _attrs;
-   HexType _data;			//存放网络数据包
+    AttrVer _attrs;
+    HexType _data;			//存放网络数据包
 };
 
 

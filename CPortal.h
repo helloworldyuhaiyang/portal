@@ -13,12 +13,12 @@
 #ifndef CPORTAL_H
 #define CPORTAL_H
 
-#include"CPortalMsg.h"
+#include "CPortalMsg.h"
+#include "CPortalMsgv2.h"
 #include<memory>
 
 #include <Poco/Net/DatagramSocket.h>
 #include <Poco/Net/SocketAddress.h>
-
 
 namespace Taiji {
 
@@ -28,7 +28,7 @@ class CPortal
 {
 public:
     CPortal() = delete;
-    CPortal( EPORTAL_VER ver = EPORTAL_VER::VER1 );
+    CPortal(EPORTAL_VER ver = EPORTAL_VER::VER1 , const std::string &secret = "");
 
     //设置协议版本号
     void setVersion( EPORTAL_VER ver );
@@ -43,10 +43,11 @@ public:
                    const std::string& userName,
                    const std::string& userPass,
                    const Poco::Net::SocketAddress& addr,
-                   const Poco::Timespan &timeout);
+                   const Poco::Timespan &timeout );
 
-    void userLogout( const std::string& userIp,
-                     const Poco::Net::SocketAddress& addr, Poco::Timespan& timeout );
+    void userLogout(const std::string& userIp,
+                     const Poco::Net::SocketAddress& addr,
+                     const Poco::Timespan& timeout );
     /**
      * @brief sendChallenge
      *
@@ -69,7 +70,6 @@ public:
      */
     void sendAffAuthAck( void );
 
-    static HexType md5( const HexType& in );
 private:
     struct SSession
     {

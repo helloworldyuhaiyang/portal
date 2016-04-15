@@ -1,0 +1,85 @@
+/**
+* Copyright (c) 2015, 爱wifi（版权声明）
+*
+* @file xxxxxxx
+* @brief 文件的简单介绍
+*
+* 文件的详细介绍
+*
+* @author: yuhaiyang
+* @date: 2016/4/15
+*/
+
+#include "CPortalMsgv2.h"
+
+#include <memory.h>
+
+namespace Taiji {
+
+
+
+
+CPortalMsgv2::CPortalMsgv2(const std::string &secret)
+{
+    _secret = secret;
+}
+
+const HexType& CPortalMsgv2::pack()
+{
+    _data.clear();
+
+    //设置属性个数
+    setAttrNum( _attrs.size() );
+    //添加头信息
+    _data.append( ( uint8_t*)&_head, sizeof(_head) );
+    //添加 authenticator 到数据包
+    HexType authenticator = getAuthenticator();
+    //增加认证字段到数据包
+    _data.append( authenticator.data(), authenticator.length() );
+    //打包所有的属性数据到 _data里
+    packAttrs( _data );
+
+    return _data;
+}
+
+void CPortalMsgv2::unpack(const HexType &data)
+{
+    if ( data.length() < sizeof(SMsgHead) +16 )
+    {
+        throw ExceptInvildLength("length of portal pack is too small");
+    }
+    //解析头信息
+    ::mempcpy( &_head, data.data(), sizeof(SMsgHead) );
+    //取出发送过来的 authenticator
+    HexType authenRecv;
+    authenRecv.append( data.data()+sizeof(SMsgHead), 16 );
+    //解析属性包
+    auto attrsStart = data.begin() + sizeof(SMsgHead)+16;
+    auto attrsEnd = data.end();
+    unpackAttrs( attrsStart, attrsEnd );
+
+    //获取本数据包应该的 authenticator
+    HexType authenticator = getAuthenticator();
+    //核对 authenticator 的值
+    if ( authenRecv != authenticator )
+    {
+        throw ExceptUnexceptedPack( "authenticator is not correct" );
+    }
+}
+
+HexType CPortalMsgv2::getAuthenticator(void )
+{
+    //添加 authenticator 到数据包
+    HexType authenIn( (uint8_t*)&_head, sizeof(_head) );
+    authenIn.append( 16, 0x00 );
+    //增加属性包到 authenIn
+    packAttrs( authenIn );
+    //增加共享密钥
+    authenIn.append( (uint8_t*)_secret.data(), _secret.length() );
+    //生成认证字
+    return  md5( authenIn );
+}
+
+
+
+}

@@ -55,7 +55,8 @@ SOURCES       = ../CPortalMsg.cpp \
 		../PortalCommon.cpp \
 		../gtest/CAttrUnit.cpp \
 		../gtest/CMsgUnit.cpp \
-		../gtest/CPortalUnit.cpp 
+		../gtest/CPortalUnit.cpp \
+		../CPortalMsgv2.cpp 
 OBJECTS       = CPortalMsg.o \
 		CPortal.o \
 		CPortalAttr.o \
@@ -63,7 +64,8 @@ OBJECTS       = CPortalMsg.o \
 		PortalCommon.o \
 		CAttrUnit.o \
 		CMsgUnit.o \
-		CPortalUnit.o
+		CPortalUnit.o \
+		CPortalMsgv2.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/shell-unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
@@ -120,14 +122,16 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		common/Exception.h \
 		gtest/CAttrUnit.h \
 		gtest/CMsgUnit.h \
-		gtest/CPortalUnit.h ../CPortalMsg.cpp \
+		gtest/CPortalUnit.h \
+		CPortalMsgv2.h ../CPortalMsg.cpp \
 		../CPortal.cpp \
 		../CPortalAttr.cpp \
 		../common/Exception.cpp \
 		../PortalCommon.cpp \
 		../gtest/CAttrUnit.cpp \
 		../gtest/CMsgUnit.cpp \
-		../gtest/CPortalUnit.cpp
+		../gtest/CPortalUnit.cpp \
+		../CPortalMsgv2.cpp
 QMAKE_TARGET  = portal
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = portal
@@ -344,6 +348,13 @@ CPortalUnit.o: ../gtest/CPortalUnit.cpp ../gtest/CPortalUnit.h \
 		../common/Exception.h \
 		../CPortalAttr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CPortalUnit.o ../gtest/CPortalUnit.cpp
+
+CPortalMsgv2.o: ../CPortalMsgv2.cpp ../CPortalMsgv2.h \
+		../CPortalMsg.h \
+		../PortalCommon.h \
+		../common/Exception.h \
+		../CPortalAttr.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CPortalMsgv2.o ../CPortalMsgv2.cpp
 
 ####### Install
 

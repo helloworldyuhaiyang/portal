@@ -144,12 +144,8 @@ const HexType &CPortalMsgV1::pack()
     setAttrNum( _attrs.size() );
     //添加头信息
     _data.append( ( uint8_t*)&_head, sizeof(_head) );
-    //添加属性信息
-    for ( auto& it : _attrs )
-    {
-        const HexType& data = it.pack();
-        _data.append( data.data(), data.length() );
-    }
+    //打包所有的属性数据到 _data里
+    packAttrs( _data );
 
     return _data;
 }
@@ -162,25 +158,11 @@ void CPortalMsgV1::unpack( const HexType& data )
     }
     //解析头信息
     ::mempcpy( &_head, data.data(), sizeof(SMsgHead) );
-    uint8_t atNum = attrNum();
+
     //解析属性包
-    CPortalAttr attr;
-    auto attrsIt = data.begin() + sizeof(SMsgHead);
+    auto attrsStart = data.begin() + sizeof(SMsgHead);
     auto attrsEnd = data.end();
-    for ( int i=0; i < atNum; ++i )
-    {
-        //解包属性
-        attr.unpack( HexType(attrsIt, attrsEnd) );
-        //存入数组
-        _attrs.push_back( attr );
-        //跳过一个属性包
-        attrsIt += attr.length();
-        //判断长度防止越界
-        if ( attrsIt > attrsEnd )
-        {
-            throw ExceptErrorFormat( "Format of attrs is error");
-        }
-    }
+    unpackAttrs( attrsStart, attrsEnd );
 }
 
 void CPortalMsgV1::addAttr(const CPortalAttr &attr)
@@ -197,6 +179,54 @@ void CPortalMsgV1::setAttrs(const AttrVer &attr)
 {
     _attrs = attr;
 }
+
+
+//解包属性数据到 _attrs
+void CPortalMsgV1::unpackAttrs(HexType::const_iterator &start,
+                                 HexType::const_iterator &end )
+{
+    if ( start > end )
+    {
+        throw ExceptInvildLength( "length of attrpack is invaild");
+    }
+
+    uint8_t atNum = attrNum();
+    if( start == end && atNum )
+    {
+        throw ExceptInvildLength( "length of attrpack is invaild");
+    }
+
+    HexType::const_iterator it = start;
+    CPortalAttr attr;
+    for ( int i=0; i < atNum; ++i )
+    {
+        //解包属性
+        attr.unpack( HexType( it, end) );
+        //存入数组
+        _attrs.push_back( attr );
+        //跳过一个属性包
+        it += attr.length();
+        //判断长度防止越界
+        if ( it > end )
+        {
+            throw ExceptErrorFormat( "Format of attrs is error");
+        }
+    }
+}
+
+void CPortalMsgV1::packAttrs( HexType& data )
+{
+    //添加属性信息
+    for ( auto& it : _attrs )
+    {
+        const HexType& dataTmp = it.pack();
+        data.append( dataTmp.data(), dataTmp.length() );
+    }
+}
+
+
+
+
 
 }
 

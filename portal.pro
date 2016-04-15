@@ -11,7 +11,8 @@ SOURCES += \
     PortalCommon.cpp	\
     gtest/CAttrUnit.cpp \
     gtest/CMsgUnit.cpp \
-    gtest/CPortalUnit.cpp
+    gtest/CPortalUnit.cpp \
+    CPortalMsgv2.cpp
 
 HEADERS += \
     CPortalMsg.h \
@@ -21,7 +22,8 @@ HEADERS += \
     common/Exception.h	\
     gtest/CAttrUnit.h \
     gtest/CMsgUnit.h \
-    gtest/CPortalUnit.h
+    gtest/CPortalUnit.h \
+    CPortalMsgv2.h
 
 
 LIBS += \

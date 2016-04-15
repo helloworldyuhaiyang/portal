@@ -86,6 +86,7 @@ typedef std::basic_string<uint8_t> HexType;
 void PrintHex( const void *data, size_t len );
 
 
+HexType md5(const HexType &in);
 
 }
 

@@ -30,7 +30,7 @@ TEST_F( CPortalUnit,login_Ok )
     Poco::Net::SocketAddress nasAddr( "192.168.4.179",2000 );
     Poco::Timespan timeout( 5,0 );
     try{
-        portal.userAuth("192.168.100.34","test","123456",nasAddr, timeout );
+        portal.userAuth("192.168.100.31","test","123456",nasAddr, timeout );
     }catch( Taiji::ExceptPortal& e )
     {
         std::cerr << "!!!!!!!!!" << e.getErrInfo() << "!!!!!!!!!!" << std::endl;
@@ -51,7 +51,7 @@ TEST_F( CPortalUnit,logout_Ok )
     Poco::Net::SocketAddress nasAddr( "192.168.4.179",2000 );
     Poco::Timespan timeout( 5,0 );
     try{
-        portal.userLogout("192.168.100.34",nasAddr, timeout );
+        portal.userLogout("192.168.100.31",nasAddr, timeout );
     }catch( Taiji::ExceptPortal& e )
     {
         std::cerr << "!!!!!!!!!" << e.getErrInfo() << "!!!!!!!!!!" << std::endl;

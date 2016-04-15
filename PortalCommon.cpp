@@ -10,6 +10,8 @@
 */
 
 #include "PortalCommon.h"
+#include "openssl/md5.h"
+
 
 namespace Taiji {
 
@@ -40,5 +42,20 @@ void PrintHex( const void *data, size_t len )
     }
     printf("\n");
 }
+
+
+HexType md5(const HexType &in)
+{
+        uint8_t sign[16] = {0};
+        MD5_CTX md5_ctx;
+        MD5_Init(&md5_ctx);
+        MD5_Update(&md5_ctx, in.data(), in.length());
+        MD5_Final(sign, &md5_ctx);
+        return HexType( sign, 16 );
+}
+
+
+
+
 
 }

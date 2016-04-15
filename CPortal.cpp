@@ -14,17 +14,25 @@
 #include <memory>
 
 #include <stdlib.h>
-#include "openssl/md5.h"
-
 
 namespace Taiji {
 
 using namespace std;
 
 
-CPortal::CPortal(EPORTAL_VER ver)
+CPortal::CPortal(EPORTAL_VER ver,const string& secret )
 {
     _session._ver = ver;
+    if ( EPORTAL_VER::VER1 == _session._ver )
+    {
+        _pMsgPack = std::shared_ptr<CPortalMsgV1>( new CPortalMsgV1 );
+    }else if ( EPORTAL_VER::VER2 == _session._ver )
+    {
+        _pMsgPack = std::shared_ptr<CPortalMsgv2>( new CPortalMsgv2( secret) );
+    }else
+    {
+        throw ExceptErrorVersion("version is not support");
+    }
 }
 
 void CPortal::setVersion(EPORTAL_VER ver)
@@ -48,7 +56,7 @@ HexType CPortal::recvData()
 }
 
 void CPortal::userAuth(const std::string &userIp, const std::string &userName,
-                       const std::string &userPass,const Poco::Net::SocketAddress &addr,
+                       const std::string &userPass, const Poco::Net::SocketAddress &addr,
                        const Poco::Timespan& timeout )
 {
     //保存会话信息
@@ -60,17 +68,6 @@ void CPortal::userAuth(const std::string &userIp, const std::string &userName,
     //设置超时时间
     _sock.setReceiveTimeout( timeout );
 
-    if ( EPORTAL_VER::VER1 == _session._ver )
-    {
-        _pMsgPack = std::shared_ptr<CPortalMsgV1>( new CPortalMsgV1 );
-    }else if ( EPORTAL_VER::VER2 == _session._ver )
-    {
-
-    }else
-    {
-        throw ExceptErrorVersion("version is not support");
-    }
-
     //发送 challenge
     sendChallenge();
     //发送认证包
@@ -81,7 +78,7 @@ void CPortal::userAuth(const std::string &userIp, const std::string &userName,
 
 void CPortal::userLogout(const string &userIp,
                          const Poco::Net::SocketAddress &addr,
-                         Poco::Timespan &timeout)
+                         const Poco::Timespan &timeout )
 {
     //保存回话信息
     _session._serialNo = ::random();
@@ -90,16 +87,7 @@ void CPortal::userLogout(const string &userIp,
     //设置超时时间
     _sock.setReceiveTimeout( timeout );
 
-    if ( EPORTAL_VER::VER1 == _session._ver )
-    {
-        _pMsgPack = std::shared_ptr<CPortalMsgV1>( new CPortalMsgV1 );
-    }else if ( EPORTAL_VER::VER2 == _session._ver )
-    {
 
-    }else
-    {
-        throw ExceptErrorVersion("version is not support");
-    }
 
     _pMsgPack->setType( EMSG_TYPE::REQ_LOGOUT );
     _pMsgPack->setSerialNo( _session._serialNo );
@@ -252,17 +240,6 @@ void CPortal::sendAffAuthAck()
     _pMsgPack->setReqId( _session._reqId );
     _pMsgPack->setUserIp( _session._userIp );
     sendData( _pMsgPack->pack() );
-}
-
-
-HexType CPortal::md5(const HexType &in)
-{
-        uint8_t sign[16] = {0};
-        MD5_CTX md5_ctx;
-        MD5_Init(&md5_ctx);
-        MD5_Update(&md5_ctx, in.data(), in.length());
-        MD5_Final(sign, &md5_ctx);
-        return HexType( sign, 16 );
 }
 
 
