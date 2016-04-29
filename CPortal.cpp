@@ -125,6 +125,10 @@ void CPortal::userLogout(const string &userIp,
 
 void CPortal::sendChallenge( void )
 {
+    //清空报文
+    _pMsgPack->clear();
+
+
     _pMsgPack->setType( EMSG_TYPE::REQ_CHALLENGE );
     _pMsgPack->setSerialNo( _session._serialNo );
     _pMsgPack->setUserIp( _session._userIp );
@@ -178,6 +182,8 @@ void CPortal::sendChallenge( void )
 
 void CPortal::sendAuthReq()
 {
+    //清空报文
+    _pMsgPack->clear();
     uint8_t chapId = _session._reqId & 0xff;
     HexType in;
     in.append( &chapId,1 );
@@ -234,8 +240,10 @@ void CPortal::sendAuthReq()
 
 void CPortal::sendAffAuthAck()
 {
+    //清空报文
+    _pMsgPack->clear();
     //发送数据
-    _pMsgPack->setType( EMSG_TYPE::ACK_AUTH );
+    _pMsgPack->setType( EMSG_TYPE::AFF_ACK_AUTH );
     _pMsgPack->setSerialNo( _session._serialNo );
     _pMsgPack->setReqId( _session._reqId );
     _pMsgPack->setUserIp( _session._userIp );

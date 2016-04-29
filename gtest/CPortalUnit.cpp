@@ -27,10 +27,10 @@ void CPortalUnit::TearDownTestCase()
 TEST_F( CPortalUnit,login_Ok )
 {
     CPortal portal( EPORTAL_VER::VER1 );
-    Poco::Net::SocketAddress nasAddr( "192.168.4.179",2000 );
-    Poco::Timespan timeout( 5,0 );
+    Poco::Net::SocketAddress nasAddr( "192.168.10.99",2000 );
+    Poco::Timespan timeout( 7,0 );
     try{
-        portal.userAuth("192.168.100.31","test","123456",nasAddr, timeout );
+        portal.userAuth("192.168.202.5","test","123456",nasAddr, timeout );
     }catch( Taiji::ExceptPortal& e )
     {
         std::cerr << "!!!!!!!!!" << e.getErrInfo() << "!!!!!!!!!!" << std::endl;

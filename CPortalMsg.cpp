@@ -165,6 +165,23 @@ void CPortalMsgV1::unpack( const HexType& data )
     unpackAttrs( attrsStart, attrsEnd );
 }
 
+void CPortalMsgV1::clear()
+{
+    _head._ver = EPORTAL_VER::VER1;	//协议版本
+    _head._type = EMSG_TYPE::NONE;		//报文类型
+    _head._auth = EAUTH_TYPE::CHAP;	//用户的认证方式,现在只需要支持chap模式
+    _head._rsv = 0;		//预留字段,全部填0
+    _head._serialNo = 0; //报文序列号 portal 随机生成
+    _head._reqId = 0;	//nas 设备随机生成
+    _head._userIp = 0; 	//用户的 mac
+    _head._userPort = 0;	//用户的 port 没有用到
+    _head._errCode = 0;	//错误码
+    _head._attrNum = 0;	//属性个数
+
+    //清空属性
+    _attrs.clear();
+}
+
 void CPortalMsgV1::addAttr(const CPortalAttr &attr)
 {
     _attrs.push_back( attr );

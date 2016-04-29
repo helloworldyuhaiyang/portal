@@ -67,6 +67,7 @@ void CPortalMsgv2::unpack(const HexType &data)
     }
 }
 
+
 HexType CPortalMsgv2::getAuthenticator(void )
 {
     //添加 authenticator 到数据包

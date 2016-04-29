@@ -31,7 +31,7 @@ CPortalAttr::CPortalAttr(const CPortalAttr &other)
     setVal( other.val() );
 }
 
-CPortalAttr::CPortalAttr(EATTR_TYPE type, const std::__cxx11::string &val)
+CPortalAttr::CPortalAttr(EATTR_TYPE type, const std::string &val)
 {
     setType( type );
     setVal( val );

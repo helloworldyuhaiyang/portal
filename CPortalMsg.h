@@ -74,6 +74,9 @@ public:
     virtual void unpack( const HexType& data );
 
 
+    virtual void clear( void );
+
+
     void addAttr( const CPortalAttr& attr );
     const AttrVer& attrs() const;
     void setAttrs(const AttrVer &attr);
