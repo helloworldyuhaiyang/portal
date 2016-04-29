@@ -48,10 +48,10 @@ void CPortal::sendData(const HexType &data)
 
 HexType CPortal::recvData()
 {
+    Poco::Net::SocketAddress from;
     uint8_t buf[2048];
-    int n = _sock.receiveFrom( buf,sizeof(buf), _session._nasAddr );
-    PrintHex( buf, n );
 
+    int n = _sock.receiveFrom( buf,sizeof(buf), from );
     return HexType ( buf,n );
 }
 
