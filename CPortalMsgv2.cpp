@@ -36,7 +36,7 @@ const HexType& CPortalMsgv2::pack()
     //添加 authenticator 到数据包
     getReqAuthenticator();
     //增加认证字段到数据包
-    _data.append( _reqAuthenticator.data(), _reqAuthenticator.length() );
+    _data.append( _reqAuthenticator );
     //打包所有的属性数据到 _data里
     packAttrs( _data );
 
@@ -85,7 +85,7 @@ void CPortalMsgv2::getAckAuthenticator(void )
 {
     //添加 authenticator 到数据包
     HexType authenIn( (uint8_t*)&_head, sizeof(_head) );
-    authenIn.append( _reqAuthenticator.data(),16);
+    authenIn.append( _reqAuthenticator );
     printf("_reqAuthenticator:\n");
     PrintHex(_reqAuthenticator.data(),16);
     //增加属性包到 authenIn
