@@ -38,6 +38,10 @@ void PrintHex( const void *data, size_t len )
 
     for ( size_t i = 0; i < len; ++i )
     {
+        if ( i%8 == 0 )
+        {
+            printf( "\n" );
+        }
         printf("%02x ", *(p+i) );
     }
     printf("\n");

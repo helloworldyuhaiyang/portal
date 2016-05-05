@@ -9,7 +9,7 @@
 * @date: 2016/4/11
 */
 
-#include "Exception.h"
+#include "PortalException.h"
 
 namespace Taiji {
 
@@ -24,23 +24,23 @@ ExceptInfoMap& GetExceptionCode( void )
 }
 
 
-Exception::Exception(const std::string &errInfo) :
+PortalException::PortalException(const std::string &errInfo) :
     _errInfo(errInfo)
 {
 
 }
 
-Exception::~Exception()
+PortalException::~PortalException()
 {
 
 }
 
-const char *Exception::what() noexcept
+const char *PortalException::what() noexcept
 {
     return _errInfo.c_str();
 }
 
-const std::string Exception::getErrorCodeString() noexcept
+const std::string PortalException::getErrorCodeString() noexcept
 {
     std::string errCode;
     std::stringstream ss;
@@ -50,12 +50,12 @@ const std::string Exception::getErrorCodeString() noexcept
     return errCode;
 }
 
-int Exception::getErrorCode()
+int PortalException::getErrorCode()
 {
     return _errCode;
 }
 
-const std::string Exception::getErrInfo()
+const std::string PortalException::getErrInfo()
 {
     std::string errCode, errInfo;
     std::stringstream ss;

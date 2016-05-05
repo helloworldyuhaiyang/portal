@@ -13,7 +13,7 @@
 #ifndef PORTALCOMMON_H
 #define PORTALCOMMON_H
 
-#include "common/Exception.h"
+#include "PortalException.h"
 #include <vector>
 #include <map>
 
@@ -87,6 +87,7 @@ void PrintHex( const void *data, size_t len );
 
 
 HexType md5(const HexType &in);
+//#define DEBUGOUT( argv, value )  	std::cout << "DEBUG INFO:" << argv << ":" << value << std::endl;
 
 }
 

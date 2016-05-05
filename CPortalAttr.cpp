@@ -106,19 +106,17 @@ void CPortalAttr::unpack( const HexType& data )
     _val.assign( begin, begin+length()-sizeof(SAttrHead) );
 }
 
-void CPortalAttr::printHex()
-{
-    const uint8_t* p = (const uint8_t*)_data.data();
-    size_t len = _data.length();
+//void CPortalAttr::printHex()
+//{
+//    const uint8_t* p = (const uint8_t*)_data.data();
+//    size_t len = _data.length();
 
-    for ( size_t i = 0; i < len; ++i )
-    {
-        printf("%02x ", *(p+i) );
-    }
-    printf("\n");
-}
-
-
+//    for ( size_t i = 0; i < len; ++i )
+//    {
+//        printf("%02x ", *(p+i) );
+//    }
+//    printf("\n");
+//}
 
 
 }

@@ -48,7 +48,7 @@ public:
 
     void unpack( const HexType& data );
 
-    void printHex();
+//    void printHex();
 private:
     //数据包类型与对应的字符串
     static AttrType2Str _typeStr;
