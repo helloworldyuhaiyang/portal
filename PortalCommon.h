@@ -36,6 +36,9 @@ TAIJI_NEW_EXCEPTION_INCLUDE( ExceptErrorFormat,ExceptPortal, 3 )
 //不是预期的包
 TAIJI_NEW_EXCEPTION_INCLUDE( ExceptUnexceptedPack,ExceptPortal ,4 )
 
+//重复的请求
+TAIJI_NEW_EXCEPTION_INCLUDE( ExceptDuplicateReq, ExceptPortal ,5 )
+
 //portal 协议的版本号
 enum class EPORTAL_VER : uint8_t
 {

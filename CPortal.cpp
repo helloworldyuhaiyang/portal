@@ -159,8 +159,8 @@ void CPortal::sendChallenge( void )
         switch ( errCode )
         {
             case 1: throw ExceptUnexceptedPack("challenge refused"); break;
-            case 2:  break;	//链接已经建立
-            case 3: throw ExceptUnexceptedPack( "user is authing, try again later,when challenge"); break;//稍后再试
+            case 2: throw ExceptDuplicateReq( "duplicate challenge request,connection is established" ); break;
+            case 3: throw ExceptDuplicateReq( "user is authing, try again later,when challenge"); break;//稍后再试
             case 4: throw ExceptUnexceptedPack( "challenge failed (errcode:4)" );break;
             default : throw ExceptUnexceptedPack( "unknow errCode" );
         }
@@ -230,8 +230,8 @@ void CPortal::sendAuthReq()
         switch ( errCode )
         {
             case 1: throw ExceptUnexceptedPack("auth req is refused"); break;
-            case 2:  break;	//链接已经建立
-            case 3: throw ExceptUnexceptedPack( "user is authing, try again later,when auth req"); break;//稍后再试
+            case 2: throw ExceptDuplicateReq( "duplicate auth request,connection is established" ); break;
+            case 3: throw ExceptDuplicateReq( "user is authing, try again later,when auth req"); break;//稍后再试
             case 4: throw ExceptUnexceptedPack( "auth failed (errcode:4)" );break;
             default : throw ExceptUnexceptedPack( "unknow errCode" );
         }
