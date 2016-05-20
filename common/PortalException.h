@@ -12,8 +12,8 @@
  *
  * 修订说明:初始版本
  */
-#ifndef EXCEPTION_H_
-#define EXCEPTION_H_
+#ifndef PORTALEXCEPTION_H_
+#define PORTALEXCEPTION_H_
 #include <sstream>
 #include <map>
 #include <iostream>
@@ -25,13 +25,13 @@ namespace Taiji
 typedef std::map<int, std::string> ExceptInfoMap;
 
 
-class Exception: public std::exception
+class PortalException: public std::exception
 {
 public:
-    Exception() = default;
-    Exception( const std::string &errInfo );
+    PortalException() = default;
+    PortalException( const std::string &errInfo );
 
-    ~Exception( ) noexcept;
+    ~PortalException( ) noexcept;
 
     virtual const char* what( ) noexcept;
 
@@ -99,7 +99,7 @@ private:
 //添加基类异常的时候注意不要重复编号
 //
 /////////////////////////////////////////////////////////////////////////////////
-TAIJI_NEW_EXCEPTION_INCLUDE( ExceptProtocal ,Exception,900)
+TAIJI_NEW_EXCEPTION_INCLUDE( ExceptProtocal ,PortalException,900)
 
 
 

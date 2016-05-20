@@ -13,7 +13,7 @@
 #ifndef PORTALCOMMON_H
 #define PORTALCOMMON_H
 
-#include "common/Exception.h"
+#include "PortalException.h"
 #include <vector>
 #include <map>
 
@@ -35,6 +35,9 @@ TAIJI_NEW_EXCEPTION_INCLUDE( ExceptErrorFormat,ExceptPortal, 3 )
 
 //不是预期的包
 TAIJI_NEW_EXCEPTION_INCLUDE( ExceptUnexceptedPack,ExceptPortal ,4 )
+
+//重复的请求
+TAIJI_NEW_EXCEPTION_INCLUDE( ExceptDuplicateReq, ExceptPortal ,5 )
 
 //portal 协议的版本号
 enum class EPORTAL_VER : uint8_t
@@ -87,6 +90,7 @@ void PrintHex( const void *data, size_t len );
 
 
 HexType md5(const HexType &in);
+//#define DEBUGOUT( argv, value )  	std::cout << "DEBUG INFO:" << argv << ":" << value << std::endl;
 
 }
 
