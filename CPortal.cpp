@@ -50,8 +50,10 @@ HexType CPortal::recvData()
 {
     Poco::Net::SocketAddress from;
     uint8_t buf[2048];
-
     int n = _sock.receiveFrom( buf,sizeof(buf), from );
+   // int n = _sock.receiveFrom( buf,sizeof(buf), _session._nasAddr );
+    //PrintHex( buf, n );
+
     return HexType ( buf,n );
 }
 
@@ -94,7 +96,16 @@ void CPortal::userLogout(const string &userIp,
     _pMsgPack->setUserIp( _session._userIp );
     //发送数据
     sendData( _pMsgPack->pack() );
-    HexType rData = recvData();
+    HexType rData;
+    try
+    {
+        rData = recvData();
+    }
+    catch( Poco::TimeoutException &e)
+    {
+        throw ExceptTimeout( "timeout exception when userLogout." );
+    }
+    _pMsgPack->clearAttr();
     _pMsgPack->unpack( rData );
     //类型判断
     if ( _pMsgPack->type() != EMSG_TYPE::ACK_LOGOUT )
@@ -125,16 +136,22 @@ void CPortal::userLogout(const string &userIp,
 
 void CPortal::sendChallenge( void )
 {
-    //清空报文
-    _pMsgPack->clear();
-
-
     _pMsgPack->setType( EMSG_TYPE::REQ_CHALLENGE );
     _pMsgPack->setSerialNo( _session._serialNo );
     _pMsgPack->setUserIp( _session._userIp );
     //发送数据
+    _pMsgPack->clearAttr();
     sendData( _pMsgPack->pack() );
-    HexType rData = recvData();
+    HexType rData;
+    try
+    {
+        rData = recvData();
+    }
+    catch( Poco::TimeoutException &e)
+    {
+        throw ExceptTimeout( "timeout exception when challenge." );
+    }
+    _pMsgPack->clearAttr();
     _pMsgPack->unpack( rData );
 
     //类型判断
@@ -158,8 +175,8 @@ void CPortal::sendChallenge( void )
         switch ( errCode )
         {
             case 1: throw ExceptUnexceptedPack("challenge refused"); break;
-            case 2:  break;	//链接已经建立
-            case 3: throw ExceptUnexceptedPack( "user is authing, try again later,when challenge"); break;//稍后再试
+            case 2: throw ExceptDuplicateReq( "duplicate challenge request" ); break;
+            case 3: throw ExceptDuplicateReq( "user is authing, try again later,when challenge"); break;//稍后再试
             case 4: throw ExceptUnexceptedPack( "challenge failed (errcode:4)" );break;
             default : throw ExceptUnexceptedPack( "unknow errCode" );
         }
@@ -182,8 +199,6 @@ void CPortal::sendChallenge( void )
 
 void CPortal::sendAuthReq()
 {
-    //清空报文
-    _pMsgPack->clear();
     uint8_t chapId = _session._reqId & 0xff;
     HexType in;
     in.append( &chapId,1 );
@@ -193,6 +208,7 @@ void CPortal::sendAuthReq()
     CPortalAttr chapPass( EATTR_TYPE::CHAP_PASS_WORD, out );
     CPortalAttr userName( EATTR_TYPE::USER_NAME, _session._userName );
     //添加认证信息
+    _pMsgPack->clearAttr();
     _pMsgPack->addAttr( userName );
     _pMsgPack->addAttr( chapPass );
     //发送数据
@@ -204,7 +220,16 @@ void CPortal::sendAuthReq()
 
 
     //接收数据
-    HexType rData = recvData();
+    HexType rData;
+    try
+    {
+        rData = recvData();
+    }
+    catch( Poco::TimeoutException &e )
+    {
+        throw ExceptTimeout( "timeout exception when auth." );
+    }
+    _pMsgPack->clearAttr();
     //解包数据
     _pMsgPack->unpack( rData );
     // serialNo 和 类型
@@ -229,8 +254,8 @@ void CPortal::sendAuthReq()
         switch ( errCode )
         {
             case 1: throw ExceptUnexceptedPack("auth req is refused"); break;
-            case 2:  break;	//链接已经建立
-            case 3: throw ExceptUnexceptedPack( "user is authing, try again later,when auth req"); break;//稍后再试
+            case 2: throw ExceptDuplicateReq( "duplicate auth request" ); break;
+            case 3: throw ExceptDuplicateReq( "user is authing, try again later,when auth req"); break;//稍后再试
             case 4: throw ExceptUnexceptedPack( "auth failed (errcode:4)" );break;
             default : throw ExceptUnexceptedPack( "unknow errCode" );
         }
@@ -240,18 +265,14 @@ void CPortal::sendAuthReq()
 
 void CPortal::sendAffAuthAck()
 {
-    //清空报文
-    _pMsgPack->clear();
     //发送数据
     _pMsgPack->setType( EMSG_TYPE::AFF_ACK_AUTH );
     _pMsgPack->setSerialNo( _session._serialNo );
     _pMsgPack->setReqId( _session._reqId );
     _pMsgPack->setUserIp( _session._userIp );
+    _pMsgPack->clearAttr();
     sendData( _pMsgPack->pack() );
 }
-
-
-
 
 
 

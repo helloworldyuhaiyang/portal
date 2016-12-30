@@ -14,7 +14,7 @@
 #define CPORTALMSG_H
 
 #include <stdint.h>
-#include "PortalCommon.h"
+//#include "PortalCommon.h"
 #include "CPortalAttr.h"
 
 
@@ -72,15 +72,16 @@ public:
      * @warnin
      */
     virtual void unpack( const HexType& data );
-
-
-    virtual void clear( void );
-
-
+    
+    /**
+     * @brief clearAttr
+     * @warnin 每次组包前必须调用
+     */
+    void clearAttr();
     void addAttr( const CPortalAttr& attr );
     const AttrVer& attrs() const;
     void setAttrs(const AttrVer &attr);
-
+    
 protected:
     //解包属性数据到 _attrs
     void unpackAttrs( HexType::const_iterator& start, HexType::const_iterator& end );

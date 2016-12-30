@@ -13,7 +13,7 @@
 #ifndef PORTALCOMMON_H
 #define PORTALCOMMON_H
 
-#include "common/Exception.h"
+#include "Taiji/TExcept/Except.h"
 #include <vector>
 #include <map>
 
@@ -21,21 +21,27 @@ namespace Taiji {
 
 
 //portal 协议模块的基本异常
-TAIJI_NEW_EXCEPTION_INCLUDE( ExceptPortal,ExceptProtocal, 20 )
+TAIJI_NEW_EXCEPTION( ExceptPortal,ExceptProtocal );
 
 //错误的 协议版本
-TAIJI_NEW_EXCEPTION_INCLUDE( ExceptErrorVersion,ExceptPortal, 1 )
+TAIJI_NEW_EXCEPTION( ExceptErrorVersion,ExceptPortal);
 
 //错误的长度
-TAIJI_NEW_EXCEPTION_INCLUDE( ExceptInvildLength,ExceptPortal, 2 )
+TAIJI_NEW_EXCEPTION( ExceptInvildLength,ExceptPortal );
 
 //报文格式不对。根据协议要求不能解析
-TAIJI_NEW_EXCEPTION_INCLUDE( ExceptErrorFormat,ExceptPortal, 3 )
+TAIJI_NEW_EXCEPTION( ExceptErrorFormat,ExceptPortal );
 
 
 //不是预期的包
-TAIJI_NEW_EXCEPTION_INCLUDE( ExceptUnexceptedPack,ExceptPortal ,4 )
+TAIJI_NEW_EXCEPTION( ExceptUnexceptedPack,ExceptPortal );
 
+//重复的请求
+TAIJI_NEW_EXCEPTION( ExceptDuplicateReq, ExceptPortal);
+
+
+//Timeout exception
+TAIJI_NEW_EXCEPTION( ExceptTimeout, ExceptPortal );
 //portal 协议的版本号
 enum class EPORTAL_VER : uint8_t
 {
@@ -87,6 +93,7 @@ void PrintHex( const void *data, size_t len );
 
 
 HexType md5(const HexType &in);
+//#define DEBUGOUT( argv, value )  	std::cout << "DEBUG INFO:" << argv << ":" << value << std::endl;
 
 }
 
